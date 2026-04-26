@@ -4,6 +4,6 @@ namespace TodoList;
 
 public class AppDbContext : DbContext
 {
-    DbSet<Model.Task> Tasks { get; set; }
-    DbSet<Model.User> Users { get; set; }
+    public DbSet<Model.Task> Tasks { get; set; }
+    public DbSet<Model.User> Users { get; set; }
 }

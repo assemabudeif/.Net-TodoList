@@ -11,6 +11,7 @@ public class CreateTaskDto
     [MinLength(10)]
     public string? Description { get; set; }
     public bool IsDone { get; set; } = false;
+    public int UserId { get; set; }
     public DateTime DateCreated { get; set; }  = DateTime.UtcNow;
     public DateTime DateModified { get; set; } 
 }

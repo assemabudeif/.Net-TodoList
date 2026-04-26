@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using TodoList.Model;
 
 namespace TodoList.DTOs;
 
@@ -14,4 +15,14 @@ public class RegisterDto
     [MinLength(6)]
     [DataType(DataType.Password)]
     public string Password { get; set; } = string.Empty;
+
+    public User ToUser()
+    {
+        return new User
+        {
+            Name = this.Name,
+            Email = this.Email,
+            Password = this.Password
+        };
+    }
 }
