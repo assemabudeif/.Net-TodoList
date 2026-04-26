@@ -4,6 +4,6 @@ namespace TodoList.Services;
 
 public interface IAuthService
 {
-    public Task<DTOs.AuthResponseDto> Register(DTOs.RegisterDto registerDto);
-    public Task<AuthResponseDto?> Login(DTOs.LoginDto loginDto);
+    public Task<AuthResponseDto?> Register(RegisterDto registerDto);
+    public Task<AuthResponseDto?> Login(LoginDto loginDto);
 }

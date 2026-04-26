@@ -10,18 +10,17 @@ namespace TodoList.Services;
 
 public class AuthService(IConfiguration config, IAuthRepository repo) : IAuthService
 {
-    
-    public async Task<AuthResponseDto> Register(RegisterDto registerDto)
+    public async Task<AuthResponseDto?> Register(RegisterDto registerDto)
     {
-        
-        var user = new User
+        var user = await repo.Register(new User
         {
             Name = registerDto.Name,
             Email = registerDto.Email,
             Password = BCrypt.Net.BCrypt.HashPassword(registerDto.Password)
-        };
-        
-        await repo.Register(user);
+        });
+
+        if (user == null) return null;
+
         var token = GenerateToken(user);
         var response = new AuthResponseDto
         {
@@ -30,17 +29,14 @@ public class AuthService(IConfiguration config, IAuthRepository repo) : IAuthSer
             Name = user.Name,
             Email = user.Email
         };
-        
+
         return response;
     }
 
     public async Task<AuthResponseDto?> Login(LoginDto loginDto)
     {
         var user = await repo.Login(loginDto);
-        if (user == null)
-        {
-            return null;
-        }
+        if (user == null) return null;
         var token = GenerateToken(user);
         var response = new AuthResponseDto
         {
@@ -50,7 +46,6 @@ public class AuthService(IConfiguration config, IAuthRepository repo) : IAuthSer
             Email = user.Email
         };
         return response;
-
     }
 
     private string GenerateToken(User user)
@@ -58,7 +53,7 @@ public class AuthService(IConfiguration config, IAuthRepository repo) : IAuthSer
         // Implement JWT token generation logic here
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
-        
+
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var claims = new[]
         {
@@ -73,8 +68,8 @@ public class AuthService(IConfiguration config, IAuthRepository repo) : IAuthSer
             claims,
             expires: DateTime.Now.AddMinutes(120),
             signingCredentials: credentials);
-        
-        
+
+
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

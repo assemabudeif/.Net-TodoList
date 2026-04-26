@@ -6,14 +6,20 @@ namespace TodoList.Repositories;
 
 public class AuthRepository(AppDbContext context) : IAuthRepository
 {
-
-
-    public async Task<User> Register(User user)
+    public async Task<User?> Register(User user)
     {
-        await context.Users.AddAsync(user);
-        await context.SaveChangesAsync();
+        try
+        {
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
 
-        return user;
+            return user;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return null;
+        }
     }
 
     public async Task<User?> Login(LoginDto loginDto)
