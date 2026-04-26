@@ -1,17 +1,24 @@
+using Microsoft.EntityFrameworkCore;
 using TodoList.DTOs;
+using TodoList.Model;
 
 namespace TodoList.Repositories;
 
-public class AuthRepository(IConfiguration configuration, AppDbContext context) : IAuthRepository
+public class AuthRepository(AppDbContext context) : IAuthRepository
 {
 
 
-    public async Task<RegisterDto> Register(RegisterDto registerDto)
+    public async Task<User> Register(User user)
     {
-        await context.Users.AddAsync(registerDto.ToUser());
+        await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
 
-        return registerDto;
+        return user;
     }
-    
+
+    public async Task<User?> Login(LoginDto loginDto)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+        return user;
+    }
 }
