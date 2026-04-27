@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TodoList;
 using TodoList.Middleware;
+using TodoList.Repositories;
+using TodoList.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseAzureSql(
     builder.Configuration.GetConnectionString("AzureSqlConnection")!));
@@ -35,14 +36,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
+
+
 var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
 app.UseHttpsRedirection();
 
@@ -62,6 +66,8 @@ app.UseExceptionHandler(appError =>
 app.UseMiddleware<LoggingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 
 
 var summaries = new[]
@@ -85,7 +91,7 @@ app.MapGet("/weatherforecast", () =>
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }

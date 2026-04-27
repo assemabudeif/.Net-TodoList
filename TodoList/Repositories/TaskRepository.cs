@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TodoList.DTOs;
 using Task = TodoList.Model.Task;
 
 namespace TodoList.Repositories;
@@ -10,9 +11,23 @@ public class TaskRepository(AppDbContext context) : ITaskRepository
         return await context.Tasks.ToListAsync();
     }
 
-    public async Task<Task?> GetByIdAsync(int id)
+    public async Task<TaskDto?> GetByIdAsync(int id)
     {
-        return await context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+        var task = await context.Tasks
+            .Include(t => t.User)
+            .FirstOrDefaultAsync(t => t.Id == id);
+        if (task == null) return null;
+        return new TaskDto
+        {
+            Id = task.Id,
+            Name = task.Name,
+            Description = task.Description,
+            IsDone = task.IsDone,
+            DateCreated = task.DateCreated,
+            DateModified = task.DateModified,
+            UserId = task.UserId,
+            UserName = task.User?.Name
+        };
     }
 
     public async Task<List<Task>> GetByUserIdAsync(int userId)
@@ -35,7 +50,9 @@ public class TaskRepository(AppDbContext context) : ITaskRepository
         task.Name = updated.Name;
         task.Description = updated.Description;
         task.IsDone = updated.IsDone;
+        task.DateCreated = updated.DateCreated;
         task.DateModified = DateTime.UtcNow;
+        task.UserId = updated.UserId;
         await context.SaveChangesAsync();
 
         updated.DateModified = DateTime.UtcNow;

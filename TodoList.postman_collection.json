@@ -1,392 +1,1069 @@
 {
-  "info": {
-    "name": "TodoList API",
-    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    "description": "Postman collection for the TodoList ASP.NET Core API. Includes JWT auth with auto-token saving and full CRUD for tasks.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:5050",
-      "type": "string",
-      "description": "Base URL of the running API. Change to your deployed URL if needed."
+    "info": {
+        "name": ".Net APIs",
+        "description": "",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
-    {
-      "key": "token",
-      "value": "",
-      "type": "string",
-      "description": "JWT access token. Populated automatically after Login or Register."
-    },
-    {
-      "key": "taskId",
-      "value": "1",
-      "type": "string",
-      "description": "Task ID used in single-task requests."
-    },
-    {
-      "key": "userId",
-      "value": "1",
-      "type": "string",
-      "description": "User ID used in get-tasks-by-user request."
-    }
-  ],
-  "item": [
-    {
-      "name": "Auth",
-      "item": [
+    "item": [
         {
-          "name": "Register",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 200) {",
-                  "    const json = pm.response.json();",
-                  "    pm.collectionVariables.set('token', json.accessToken);",
-                  "    pm.collectionVariables.set('userId', String(json.userId));",
-                  "    console.log('Token saved:', json.accessToken);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+            "name": "Auth",
+            "description": "",
+            "item": [
+                {
+                    "name": "Register",
+                    "description": "Register a new user. On success the JWT access token is automatically saved to the `token` collection variable.",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    const json = pm.response.json();",
+                                    "    pm.collectionVariables.set('token', json.accessToken);",
+                                    "    pm.collectionVariables.set('userId', String(json.userId));",
+                                    "    console.log('Token saved:', json.accessToken);",
+                                    "}"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        }
+                    ],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"Name\": \"Assem\",\n  \"Email\": \"assem@gmail.com\",\n  \"Password\": \"secret123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "description": "",
+                                "type": "string"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/register",
+                            "path": [
+                                "api",
+                                "auth",
+                                "register"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK - Registered",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "description": "",
+                                        "disabled": false
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/auth/register",
+                                    "path": [
+                                        "api",
+                                        "auth",
+                                        "register"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": [],
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"userId\": 1,\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"dateCreated\": \"2026-04-27T10:00:00Z\",\n  \"dateModified\": null\n}"
+                        },
+                        {
+                            "name": "400 Bad Request - Registration Failed",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "description": "",
+                                        "disabled": false
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/auth/register",
+                                    "path": [
+                                        "api",
+                                        "auth",
+                                        "register"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": [],
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"message\": \"Registration failed\"\n}"
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Login",
+                    "description": "Login with existing credentials. On success the JWT access token is automatically saved to the `token` collection variable.",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    const json = pm.response.json();",
+                                    "    pm.collectionVariables.set('token', json.accessToken);",
+                                    "    pm.collectionVariables.set('userId', String(json.userId));",
+                                    "    console.log('Token saved:', json.accessToken);",
+                                    "}"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        }
+                    ],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "description": "",
+                                "type": "string"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/login",
+                            "path": [
+                                "api",
+                                "auth",
+                                "login"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK - Logged In",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "description": "",
+                                        "disabled": false
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/auth/login",
+                                    "path": [
+                                        "api",
+                                        "auth",
+                                        "login"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": [],
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"userId\": 1,\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"dateCreated\": \"2026-04-27T10:00:00Z\",\n  \"dateModified\": null\n}"
+                        },
+                        {
+                            "name": "401 Unauthorized",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "description": "",
+                                        "disabled": false
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/auth/login",
+                                    "path": [
+                                        "api",
+                                        "auth",
+                                        "login"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": [],
+                            "status": "Unauthorized",
+                            "code": 401,
+                            "_postman_previewlanguage": "text",
+                            "header": [],
+                            "body": ""
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "register"]
-            },
-            "description": "Register a new user. On success the JWT access token is automatically saved to the `token` collection variable."
-          },
-          "response": [
-            {
-              "name": "200 OK - Registered",
-              "status": "OK",
-              "code": 200,
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "{\n  \"userId\": 1,\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"dateCreated\": \"2026-04-27T10:00:00Z\",\n  \"dateModified\": null\n}"
-            },
-            {
-              "name": "400 Bad Request - Registration Failed",
-              "status": "Bad Request",
-              "code": 400,
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "{\n  \"message\": \"Registration failed\"\n}"
-            }
-          ]
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "auth": {}
         },
         {
-          "name": "Login",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 200) {",
-                  "    const json = pm.response.json();",
-                  "    pm.collectionVariables.set('token', json.accessToken);",
-                  "    pm.collectionVariables.set('userId', String(json.userId));",
-                  "    console.log('Token saved:', json.accessToken);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+            "name": "Tasks",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get All Tasks",
+                    "description": "Returns all tasks. Requires JWT.",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/task",
+                            "path": [
+                                "api",
+                                "task"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task",
+                                    "path": [
+                                        "api",
+                                        "task"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": [],
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "text",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Buy groceries\",\n    \"description\": \"Milk, eggs, bread, and butter\",\n    \"isDone\": false,\n    \"userId\": 1,\n    \"dateCreated\": \"2026-04-27T10:05:00Z\",\n    \"dateModified\": \"0001-01-01T00:00:00Z\"\n  }\n]"
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Get Task By ID",
+                    "description": "Returns a single task by its ID.",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/task/1",
+                            "path": [
+                                "api",
+                                "task",
+                                "1"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task/1",
+                                    "path": [
+                                        "api",
+                                        "task",
+                                        "1"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": [],
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"id\": 1,\n  \"name\": \"Buy groceries\",\n  \"description\": \"Milk, eggs, bread, and butter\",\n  \"isDone\": false,\n  \"userId\": 1,\n  \"dateCreated\": \"2026-04-27T10:05:00Z\",\n  \"dateModified\": \"0001-01-01T00:00:00Z\"\n}"
+                        },
+                        {
+                            "name": "404 Not Found",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task/1",
+                                    "path": [
+                                        "api",
+                                        "task",
+                                        "1"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": [],
+                            "status": "Not Found",
+                            "code": 404,
+                            "_postman_previewlanguage": "text",
+                            "header": [],
+                            "body": ""
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Get Tasks By User ID",
+                    "description": "Returns all tasks belonging to a specific user.",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/task/user/1",
+                            "path": [
+                                "api",
+                                "task",
+                                "user",
+                                "1"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task/user/1",
+                                    "path": [
+                                        "api",
+                                        "task",
+                                        "user",
+                                        "1"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": [],
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "text",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Buy groceries\",\n    \"description\": \"Milk, eggs, bread, and butter\",\n    \"isDone\": false,\n    \"userId\": 1,\n    \"dateCreated\": \"2026-04-27T10:05:00Z\",\n    \"dateModified\": \"0001-01-01T00:00:00Z\"\n  }\n]"
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Create Task",
+                    "description": "Creates a new task. On success the new task ID is saved to `taskId` collection variable.",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    const json = pm.response.json();",
+                                    "    pm.collectionVariables.set('taskId', String(json.id));",
+                                    "    console.log('Task ID saved:', json.id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        }
+                    ],
+                    "auth": {},
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Buy groceries\",\n  \"description\": \"Milk, eggs, bread, and butter\",\n  \"isDone\": false,\n  \"userId\": 1\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "description": "",
+                                "type": "string"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/task",
+                            "path": [
+                                "api",
+                                "task"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "201 Created",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "description": "",
+                                        "disabled": false
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task",
+                                    "path": [
+                                        "api",
+                                        "task"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Buy groceries\",\n  \"description\": \"Milk, eggs, bread, and butter\",\n  \"isDone\": false,\n  \"userId\": {{userId}}\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": [],
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"id\": 1,\n  \"name\": \"Buy groceries\",\n  \"description\": \"Milk, eggs, bread, and butter\",\n  \"isDone\": false,\n  \"userId\": 1,\n  \"dateCreated\": \"2026-04-27T10:05:00Z\",\n  \"dateModified\": \"0001-01-01T00:00:00Z\"\n}"
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Update Task",
+                    "description": "Fully updates a task by ID.",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Buy groceries updated\",\n  \"description\": \"Milk, eggs, bread, butter, and coffee\",\n  \"isDone\": false\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "description": "",
+                                "type": "string"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/task/1",
+                            "path": [
+                                "api",
+                                "task",
+                                "1"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "description": "",
+                                        "disabled": false
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task/1",
+                                    "path": [
+                                        "api",
+                                        "task",
+                                        "1"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Buy groceries updated\",\n  \"description\": \"Milk, eggs, bread, butter, and coffee\",\n  \"isDone\": false\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": [],
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"id\": 1,\n  \"name\": \"Buy groceries updated\",\n  \"description\": \"Milk, eggs, bread, butter, and coffee\",\n  \"isDone\": false,\n  \"userId\": 1,\n  \"dateCreated\": \"2026-04-27T10:05:00Z\",\n  \"dateModified\": \"2026-04-27T11:00:00Z\"\n}"
+                        },
+                        {
+                            "name": "404 Not Found",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "description": "",
+                                        "disabled": false
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task/1",
+                                    "path": [
+                                        "api",
+                                        "task",
+                                        "1"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Buy groceries updated\",\n  \"description\": \"Milk, eggs, bread, butter, and coffee\",\n  \"isDone\": false\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": [],
+                            "status": "Not Found",
+                            "code": 404,
+                            "_postman_previewlanguage": "text",
+                            "header": [],
+                            "body": ""
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Toggle Task Completion",
+                    "description": "Toggles the `isDone` field of a task. No request body needed.",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/task/1",
+                            "path": [
+                                "api",
+                                "task",
+                                "1"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK - Toggled",
+                            "originalRequest": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task/1",
+                                    "path": [
+                                        "api",
+                                        "task",
+                                        "1"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": [],
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"id\": 1,\n  \"name\": \"Buy groceries\",\n  \"description\": \"Milk, eggs, bread, and butter\",\n  \"isDone\": true,\n  \"userId\": 1,\n  \"dateCreated\": \"2026-04-27T10:05:00Z\",\n  \"dateModified\": \"2026-04-27T11:00:00Z\"\n}"
+                        },
+                        {
+                            "name": "404 Not Found",
+                            "originalRequest": {
+                                "method": "PATCH",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task/1",
+                                    "path": [
+                                        "api",
+                                        "task",
+                                        "1"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": [],
+                            "status": "Not Found",
+                            "code": 404,
+                            "_postman_previewlanguage": "text",
+                            "header": [],
+                            "body": ""
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Delete Task",
+                    "description": "Deletes a task by ID.",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/task/2",
+                            "path": [
+                                "api",
+                                "task",
+                                "2"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK - Deleted",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task/2",
+                                    "path": [
+                                        "api",
+                                        "task",
+                                        "2"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": [],
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"success\": true,\n  \"message\": \"Deleted successfully\"\n}"
+                        },
+                        {
+                            "name": "404 Not Found",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/task/2",
+                                    "path": [
+                                        "api",
+                                        "task",
+                                        "2"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": [],
+                            "status": "Not Found",
+                            "code": 404,
+                            "_postman_previewlanguage": "text",
+                            "header": [],
+                            "body": ""
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"secret123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
-            },
-            "description": "Login with existing credentials. On success the JWT access token is automatically saved to the `token` collection variable."
-          },
-          "response": [
-            {
-              "name": "200 OK - Logged In",
-              "status": "OK",
-              "code": 200,
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "{\n  \"userId\": 1,\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"dateCreated\": \"2026-04-27T10:00:00Z\",\n  \"dateModified\": null\n}"
-            },
-            {
-              "name": "401 Unauthorized",
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [],
-              "body": ""
-            }
-          ]
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "auth": {}
         }
-      ]
-    },
-    {
-      "name": "Tasks",
-      "item": [
-        {
-          "name": "Get All Tasks",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/task",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "task"]
-            },
-            "description": "Returns all tasks. Requires JWT."
-          },
-          "response": [
-            {
-              "name": "200 OK",
-              "status": "OK",
-              "code": 200,
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Buy groceries\",\n    \"description\": \"Milk, eggs, bread, and butter\",\n    \"isDone\": false,\n    \"userId\": 1,\n    \"dateCreated\": \"2026-04-27T10:05:00Z\",\n    \"dateModified\": \"0001-01-01T00:00:00Z\"\n  }\n]"
-            }
-          ]
-        },
-        {
-          "name": "Get Task By ID",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/task/{{taskId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "task", "{{taskId}}"]
-            },
-            "description": "Returns a single task by its ID."
-          },
-          "response": [
-            {
-              "name": "200 OK",
-              "status": "OK",
-              "code": 200,
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "{\n  \"id\": 1,\n  \"name\": \"Buy groceries\",\n  \"description\": \"Milk, eggs, bread, and butter\",\n  \"isDone\": false,\n  \"userId\": 1,\n  \"dateCreated\": \"2026-04-27T10:05:00Z\",\n  \"dateModified\": \"0001-01-01T00:00:00Z\"\n}"
-            },
-            {
-              "name": "404 Not Found",
-              "status": "Not Found",
-              "code": 404,
-              "header": [],
-              "body": ""
-            }
-          ]
-        },
-        {
-          "name": "Get Tasks By User ID",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/task/user/{{userId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "task", "user", "{{userId}}"]
-            },
-            "description": "Returns all tasks belonging to a specific user."
-          },
-          "response": [
-            {
-              "name": "200 OK",
-              "status": "OK",
-              "code": 200,
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Buy groceries\",\n    \"description\": \"Milk, eggs, bread, and butter\",\n    \"isDone\": false,\n    \"userId\": 1,\n    \"dateCreated\": \"2026-04-27T10:05:00Z\",\n    \"dateModified\": \"0001-01-01T00:00:00Z\"\n  }\n]"
-            }
-          ]
-        },
-        {
-          "name": "Create Task",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 201) {",
-                  "    const json = pm.response.json();",
-                  "    pm.collectionVariables.set('taskId', String(json.id));",
-                  "    console.log('Task ID saved:', json.id);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
-            },
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Buy groceries\",\n  \"description\": \"Milk, eggs, bread, and butter\",\n  \"isDone\": false,\n  \"userId\": {{userId}}\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/task",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "task"]
-            },
-            "description": "Creates a new task. On success the new task ID is saved to `taskId` collection variable."
-          },
-          "response": [
-            {
-              "name": "201 Created",
-              "status": "Created",
-              "code": 201,
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "{\n  \"id\": 1,\n  \"name\": \"Buy groceries\",\n  \"description\": \"Milk, eggs, bread, and butter\",\n  \"isDone\": false,\n  \"userId\": 1,\n  \"dateCreated\": \"2026-04-27T10:05:00Z\",\n  \"dateModified\": \"0001-01-01T00:00:00Z\"\n}"
-            }
-          ]
-        },
-        {
-          "name": "Update Task",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
-            },
-            "method": "PUT",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Buy groceries updated\",\n  \"description\": \"Milk, eggs, bread, butter, and coffee\",\n  \"isDone\": false\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/task/{{taskId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "task", "{{taskId}}"]
-            },
-            "description": "Fully updates a task by ID."
-          },
-          "response": [
-            {
-              "name": "200 OK",
-              "status": "OK",
-              "code": 200,
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "{\n  \"id\": 1,\n  \"name\": \"Buy groceries updated\",\n  \"description\": \"Milk, eggs, bread, butter, and coffee\",\n  \"isDone\": false,\n  \"userId\": 1,\n  \"dateCreated\": \"2026-04-27T10:05:00Z\",\n  \"dateModified\": \"2026-04-27T11:00:00Z\"\n}"
-            },
-            {
-              "name": "404 Not Found",
-              "status": "Not Found",
-              "code": 404,
-              "header": [],
-              "body": ""
-            }
-          ]
-        },
-        {
-          "name": "Toggle Task Completion",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
-            },
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/task/{{taskId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "task", "{{taskId}}"]
-            },
-            "description": "Toggles the `isDone` field of a task. No request body needed."
-          },
-          "response": [
-            {
-              "name": "200 OK - Toggled",
-              "status": "OK",
-              "code": 200,
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "{\n  \"id\": 1,\n  \"name\": \"Buy groceries\",\n  \"description\": \"Milk, eggs, bread, and butter\",\n  \"isDone\": true,\n  \"userId\": 1,\n  \"dateCreated\": \"2026-04-27T10:05:00Z\",\n  \"dateModified\": \"2026-04-27T11:00:00Z\"\n}"
-            },
-            {
-              "name": "404 Not Found",
-              "status": "Not Found",
-              "code": 404,
-              "header": [],
-              "body": ""
-            }
-          ]
-        },
-        {
-          "name": "Delete Task",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
-            },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/task/{{taskId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "task", "{{taskId}}"]
-            },
-            "description": "Deletes a task by ID."
-          },
-          "response": [
-            {
-              "name": "200 OK - Deleted",
-              "status": "OK",
-              "code": 200,
-              "header": [{ "key": "Content-Type", "value": "application/json" }],
-              "body": "{\n  \"success\": true,\n  \"message\": \"Deleted successfully\"\n}"
-            },
-            {
-              "name": "404 Not Found",
-              "status": "Not Found",
-              "code": 404,
-              "header": [],
-              "body": ""
-            }
-          ]
-        }
-      ]
-    }
-  ]
+    ],
+    "variable": [],
+    "event": [],
+    "auth": {}
 }
-

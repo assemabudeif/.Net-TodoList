@@ -10,6 +10,9 @@ public class AuthRepository(AppDbContext context) : IAuthRepository
     {
         try
         {
+            if (await context.Users.AnyAsync(u => u.Email == user.Email))
+                return null; // Email already exists
+
             await context.Users.AddAsync(user);
             await context.SaveChangesAsync();
 

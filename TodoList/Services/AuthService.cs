@@ -27,7 +27,9 @@ public class AuthService(IConfiguration config, IAuthRepository repo) : IAuthSer
             AccessToken = token,
             UserId = user.Id,
             Name = user.Name,
-            Email = user.Email
+            Email = user.Email,
+            DateCreated = user.DateCreated,
+            DateModified = user.DateModified
         };
 
         return response;
@@ -37,13 +39,17 @@ public class AuthService(IConfiguration config, IAuthRepository repo) : IAuthSer
     {
         var user = await repo.Login(loginDto);
         if (user == null) return null;
+
+        if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password)) return null;
         var token = GenerateToken(user);
         var response = new AuthResponseDto
         {
             AccessToken = token,
             UserId = user.Id,
             Name = user.Name,
-            Email = user.Email
+            Email = user.Email,
+            DateCreated = user.DateCreated,
+            DateModified = user.DateModified
         };
         return response;
     }

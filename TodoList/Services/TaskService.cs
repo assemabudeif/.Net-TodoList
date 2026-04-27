@@ -11,7 +11,7 @@ public class TaskService(ITaskRepository repo) : ITaskService
         return await repo.GetAllAsync();
     }
 
-    public async Task<Task?> GetByIdAsync(int id)
+    public async Task<TaskDto?> GetByIdAsync(int id)
     {
         return await repo.GetByIdAsync(id);
     }
@@ -28,9 +28,13 @@ public class TaskService(ITaskRepository repo) : ITaskService
         return created;
     }
 
-    public async Task<Task?> UpdateAsync(int id, UpdateTaskDto updated)
+    public async Task<Task?> UpdateAsync(int Id, UpdateTaskDto updated, int UserId)
     {
-        return await repo.UpdateAsync(updated.ToTask(id));
+        var task = await repo.UpdateAsync(updated.ToTask(Id));
+
+        if (task != null && task.UserId != UserId) return null;
+
+        return task;
     }
 
     public Task<bool> DeleteAsync(int id)

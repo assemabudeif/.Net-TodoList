@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using TodoList.Model;
+using Task = TodoList.Model.Task;
 
 namespace TodoList;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public DbSet<Model.Task> Tasks { get; set; }
-    public DbSet<Model.User> Users { get; set; }
+    public DbSet<Task> Tasks { get; set; }
+    public DbSet<User> Users { get; set; }
 }

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoList.DTOs;
@@ -35,7 +36,9 @@ public class TaskController(ITaskService service) : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateTaskDto updated)
     {
-        var task = await service.UpdateAsync(id, updated);
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var task = await service.UpdateAsync(id, updated, userId);
         if (task == null) return NotFound();
         return Ok(task);
     }
@@ -51,6 +54,8 @@ public class TaskController(ITaskService service) : ControllerBase
     [HttpPatch("{id}")]
     public async Task<IActionResult> ToggleCompleted(int id)
     {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
         var task = await service.GetByIdAsync(id);
         if (task == null) return NotFound();
 
@@ -61,7 +66,7 @@ public class TaskController(ITaskService service) : ControllerBase
             IsDone = !task.IsDone
         };
 
-        var updated = await service.UpdateAsync(id, updatedTask);
+        var updated = await service.UpdateAsync(id, updatedTask, userId);
         return Ok(updated);
     }
 
